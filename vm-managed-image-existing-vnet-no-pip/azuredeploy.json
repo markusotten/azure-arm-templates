@@ -2,57 +2,53 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "location": {
-            "type": "string"
-        },
         "virtualMachineName": {
             "type": "string"
         },
         "virtualMachineSize": {
             "type": "string"
         },
+        "managedImageName": {
+            "type": "string"
+        },
         "adminUsername": {
-            "type": "string"
-        },
-        "virtualNetworkName": {
-            "type": "string"
-        },
-        "networkInterfaceName": {
-            "type": "string"
-        },
-        "networkSecurityGroupName": {
             "type": "string"
         },
         "adminPassword": {
             "type": "securestring"
         },
-        "diagnosticsStorageAccountName": {
-            "type": "string"
-        },
-        "diagnosticsStorageAccountId": {
-            "type": "string"
-        },
-        "diagnosticsStorageAccountType": {
+        "virtualNetworkName": {
             "type": "string"
         },
         "subnetName": {
             "type": "string"
+        },
+        "networkSecurityGroupName": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountName": {
+            "type": "string"
+        },
+        "diagnosticsStorageResourceGroup": {
+            "type": "string"
         }
     },
     "variables": {
+        "location": "[resourceGroup().location]",
         "vnetId": "[resourceId('Network_RG','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
-        "diagnosticsExtensionName": "IaaSDiagnostics"
+        "networkInterfaceName": "[concat(parameters('virtualMachineName'), '_NIC')]",
+        "diagnosticsExtensionName": "IaaSDiagnostics",
+        "diagnosticsStorageAccountId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('diagnosticsStorageResourceGroup'), '/providers/', 'Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
     },
     "resources": [
         {
             "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2016-04-30-preview",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
+                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
             ],
             "properties": {
                 "osProfile": {
@@ -68,10 +64,10 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "id": "/subscriptions/e5a7c83b-cd1f-4729-bc0e-36a4bc0a5292/resourceGroups/Storage_RG/providers/Microsoft.Compute/images/Win10_v001_MI"
+                        "id": "[resourceId('Microsoft.Compute/images',parameters('managedImageName'))]"
                     },
                     "osDisk": {
-                        "createOption": "fromImage",
+                        "createOption": "FromImage",
                         "managedDisk": {
                             "storageAccountType": "Standard_LRS"
                         }
@@ -80,14 +76,14 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
                         }
                     ]
                 },
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[reference(resourceId('VM_RG', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+                        "storageUri": "[reference(resourceId('storage_rg', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
                     }
                 }
             }
@@ -96,7 +92,7 @@
             "name": "[concat(parameters('virtualMachineName'),'/', variables('diagnosticsExtensionName'))]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2016-04-30-preview",
-            "location": "[parameters('location')]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
             ],
@@ -328,28 +324,17 @@
                 },
                 "protectedSettings": {
                     "storageAccountName": "[parameters('diagnosticsStorageAccountName')]",
-                    "storageAccountKey": "[listKeys(parameters('diagnosticsStorageAccountId'),'2015-06-15').key1]",
+                    "storageAccountKey": "[listKeys(variables('diagnosticsStorageAccountId'),'2015-06-15').key1]",
                     "storageAccountEndPoint": "https://core.windows.net/"
                 }
             }
         },
         {
-            "name": "[parameters('diagnosticsStorageAccountName')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2015-06-15",
-            "location": "[parameters('location')]",
-            "properties": {
-                "accountType": "[parameters('diagnosticsStorageAccountType')]"
-            }
-        },
-        {
-            "name": "[parameters('networkInterfaceName')]",
+            "name": "[variables('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2016-09-01",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
-            ],
+            "location": "[variables('location')]",
+            "dependsOn": [],
             "properties": {
                 "ipConfigurations": [
                     {
@@ -363,31 +348,8 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[resourceId('VM_RG', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[resourceId('Network_RG', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
-            }
-        },
-        {
-            "name": "[parameters('networkSecurityGroupName')]",
-            "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2016-09-01",
-            "location": "[parameters('location')]",
-            "properties": {
-                "securityRules": [
-                    {
-                        "name": "default-allow-rdp",
-                        "properties": {
-                            "priority": 1000,
-                            "sourceAddressPrefix": "*",
-                            "protocol": "TCP",
-                            "destinationPortRange": "3389",
-                            "access": "Allow",
-                            "direction": "Inbound",
-                            "sourcePortRange": "*",
-                            "destinationAddressPrefix": "*"
-                        }
-                    }
-                ]
             }
         }
     ],

@@ -18,10 +18,10 @@
             "value": "LAB_VN"
         },
         "networkInterfaceName": {
-            "value": "testvm001428"
+            "value": "testvm001625"
         },
         "networkSecurityGroupName": {
-            "value": "TestVM001_NSG"
+            "value": "TestVM_NSG"
         },
         "adminPassword": {
             "value": null
@@ -29,11 +29,8 @@
         "diagnosticsStorageAccountName": {
             "value": "motdiagsa"
         },
-        "diagnosticsStorageAccountType": {
-            "value": "Standard_LRS"
-        },
         "diagnosticsStorageAccountId": {
-            "value": "Microsoft.Storage/storageAccounts/motdiagsa"
+            "value": "/subscriptions/e5a7c83b-cd1f-4729-bc0e-36a4bc0a5292/resourceGroups/storage_rg/providers/Microsoft.Storage/storageAccounts/motdiagsa"
         },
         "subnetName": {
             "value": "LAB-Default_SN"
