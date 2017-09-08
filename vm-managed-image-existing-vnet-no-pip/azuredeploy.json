@@ -67,7 +67,8 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('managedImageResourceGroup'), '/providers/', 'Microsoft.Compute/images/', parameters('managedImageName'))]"
+                        "id": "/subscriptions/e5a7c83b-cd1f-4729-bc0e-36a4bc0a5292/resourceGroups/Storage_RG/providers/Microsoft.Compute/images/Win10_v001_MI"
+                        //"id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('managedImageResourceGroup'), '/providers/', 'Microsoft.Compute/images/', parameters('managedImageName'))]"
                     },
                     "osDisk": {
                         "createOption": "FromImage",
