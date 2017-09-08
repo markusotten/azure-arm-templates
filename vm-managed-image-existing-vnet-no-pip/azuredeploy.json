@@ -11,6 +11,9 @@
         "managedImageName": {
             "type": "string"
         },
+        "managedImageResourceGroup": {
+            "type": "string"
+        },
         "adminUsername": {
             "type": "string"
         },
@@ -64,7 +67,7 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "id": "[resourceId('Microsoft.Compute/images',parameters('managedImageName'))]"
+                        "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('managedImageResourceGroup'), '/providers/', 'Microsoft.Compute/images/', parameters('managedImageName'))]"
                     },
                     "osDisk": {
                         "createOption": "FromImage",
