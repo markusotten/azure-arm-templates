@@ -23,6 +23,9 @@
         "virtualNetworkName": {
             "type": "string"
         },
+        "virtualNetworkNameResourceGroup": {
+            "type": "string"
+        },
         "subnetName": {
             "type": "string"
         },
@@ -41,7 +44,7 @@
     },
     "variables": {
         "location": "[resourceGroup().location]",
-        "vnetId": "[resourceId('Network_RG','Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "vnetId": "[resourceId(parameters('virtualNetworkNameResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
         "networkInterfaceName": "[concat(parameters('virtualMachineName'), '_NIC')]",
         "diagnosticsExtensionName": "IaaSDiagnostics",
