@@ -29,6 +29,9 @@
         "networkSecurityGroupName": {
             "type": "string"
         },
+        "networkSecurityResourceGroup": {
+            "type": "string"
+        },
         "diagnosticsStorageAccountName": {
             "type": "string"
         },
@@ -67,7 +70,6 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        //"id": "/subscriptions/e5a7c83b-cd1f-4729-bc0e-36a4bc0a5292/resourceGroups/Storage_RG/providers/Microsoft.Compute/images/Win10_v001_MI"
                         "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('managedImageResourceGroup'), '/providers/', 'Microsoft.Compute/images/', parameters('managedImageName'))]"
                     },
                     "osDisk": {
@@ -87,7 +89,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[reference(resourceId('storage_rg', 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
+                        "storageUri": "[reference(resourceId(parameters('diagnosticsStorageResourceGroup'), 'Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), '2015-06-15').primaryEndpoints['blob']]"
                     }
                 }
             }
@@ -352,7 +354,7 @@
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[resourceId('Network_RG', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[resourceId(parameters('networkSecurityResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             }
         }
