@@ -23,8 +23,11 @@
         {
           "apiVersion": "2018-10-01",
           "type": "Microsoft.Network/virtualNetworks",
-          "name": "[concat('VN_',parameters('labProject'),'_Default_',parameters('labStage'))]",
           "location": "[parameters('labLocation')]",
+          "name": "[concat('VN_',parameters('labProject'),'_Default_',parameters('labStage'))]",
+          "dependsOn": [
+            "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]"
+          ],
           "properties": {
             "addressSpace": {
               "addressPrefixes": [
