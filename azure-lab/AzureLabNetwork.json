@@ -5,18 +5,62 @@
   "parameters": { 
     "labLocation": { "type": "string" },
     "labStage": { "type": "string" },
-    "labProject": { "type": "string" }
+    "labProject": { "type": "string" },
+    "labVnetAddressPrefix": { "type": "string" },
+    "labSubnetAccessAddressPrefix": { "type": "string" },
+    "labSubnetManagementAddressPrefix": { "type": "string" }
   },
   "variables": {  },
   "functions": [  ],
   "resources": [ 
-        {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "location": "[parameters('labLocation')]",
-            "name": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
-            "properties": {}
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2018-05-01",
+      "location": "[parameters('labLocation')]",
+      "name": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
+      "properties": {}
+    },
+    {
+      "apiVersion": "2018-10-01",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[concat('VN_,)parameters('labProject'),'_Default_',parameters('labStage'))]",
+      "location": "[parameters('labLocation')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('labVnetAddressPrefix')]"
+          ]
         }
-  ],
+      },
+      "resources": [
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[parameters('labLocation')]",
+          "name": "[concat('SN_,)parameters('labProject'),'_Default-Access_',parameters('labStage'))]",
+          "dependsOn": [
+            "[concat('VN_,)parameters('labProject'),'_Default_',parameters('labStage'))]"
+          ],
+          "properties": {
+            "addressPrefix": "[parameters('labSubnetAccessAddressPrefix')]"
+          }
+        },
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[parameters('labLocation')]",
+          "name": "[concat('SN_,)parameters('labProject'),'_Default-Management_',parameters('labStage'))]",
+          "dependsOn": [
+            "[concat('VN_,)parameters('labProject'),'_Default_',parameters('labStage'))]"
+          ],
+          "properties": {
+            "addressPrefix": "[parameters('labSubnetManagementAddressPrefix')]"
+          }
+        }
+      ]
+    }
+  
+
+ ],
   "outputs": {  }
 }
