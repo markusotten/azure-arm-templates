@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "apiProfile": "",
+  "parameters": { },
+  "variables": {  },
+  "functions": [  ],
+  "resources": [
+  {
+    "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
+    "name": "AzureLabNetwork",
+        "location": "northeurope",
+    "properties": {
+        "mode": "Incremental",
+        "templateLink" : {
+          "uri": "./AzureLabNetwork.json",
+          "contentVersion": "1.0.0.0"
+        }
+      }
+    }
+  ],
+  "outputs": {  }
+}
