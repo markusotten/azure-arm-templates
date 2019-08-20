@@ -3,7 +3,9 @@
   "contentVersion": "1.0.0.0",
   "apiProfile": "",
   "parameters": { 
-    "labLocation": { "type": "string" }
+    "labLocation": { "type": "string" },
+    "labStage": { "type": "string" },
+    "labProject": { "type": "string" }
   },
   "variables": {  },
   "functions": [  ],
@@ -12,7 +14,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2018-05-01",
             "location": "[parameters('labLocation')]",
-            "name": "RG_MOT_Network_LAB",
+            "name": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage')]",
             "properties": {}
         }
   ],
