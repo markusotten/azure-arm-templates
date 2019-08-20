@@ -23,6 +23,7 @@
     {
       "apiVersion": "2018-10-01",
       "type": "Microsoft.Network/virtualNetworks",
+      "resourceGroup": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
       "name": "[concat('VN_',parameters('labProject'),'_Default_',parameters('labStage'))]",
       "location": "[parameters('labLocation')]",
       "properties": {
@@ -37,6 +38,7 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[parameters('labLocation')]",
+          "resourceGroup": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
           "name": "[concat('SN_',parameters('labProject'),'_Default-Access_',parameters('labStage'))]",
           "dependsOn": [
             "[concat('VN_',parameters('labProject'),'_Default_',parameters('labStage'))]"
@@ -49,6 +51,7 @@
           "apiVersion": "2018-10-01",
           "type": "subnets",
           "location": "[parameters('labLocation')]",
+          "resourceGroup": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
           "name": "[concat('SN_',parameters('labProject'),'_Default-Management_',parameters('labStage'))]",
           "dependsOn": [
             "[concat('VN_',parameters('labProject'),'_Default_',parameters('labStage'))]"
