@@ -2,8 +2,23 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-     "location": {
+     "labLocation": {
          "value": "northeurope"
+     },
+     "labStage": {
+         "value": "LAB"
+     },
+     "labProject": {
+         "value": "MOT"
+     },
+     "labVnetAddressPrefix": {
+         "value": "10.20.0.0/16"
+     },
+     "labSubnetAccessAddressPrefix": {
+         "value": "10.20.1.0/24"
+     },
+     "labSubnetManagementAddressPrefix": {
+         "value": "10.20.2.0/24"
      }
   }
 }

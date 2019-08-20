@@ -2,19 +2,47 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "apiProfile": "",
-  "parameters": { },
+  "parameters": { 
+    "labLocation": { "type": "string" },
+    "labStage": { "type": "string" },
+    "labProject": { "type": "string" },
+    "labVnetAddressPrefix": { "type": "string" },
+    "labSubnetAccessAddressPrefix": { "type": "string" },
+    "labSubnetManagementAddressPrefix": { "type": "string" }
+  },
   "variables": {  },
   "functions": [  ],
   "resources": [
-  {
+    {
     "type": "Microsoft.Resources/deployments",
     "apiVersion": "2018-05-01",
     "name": "AzureLabNetwork",
-        "location": "northeurope",
+    "location": "[parameters('labLocation')]",
     "properties": {
         "mode": "Incremental",
         "templateLink" : {
-          "uri": "./AzureLabNetwork.json",
+          "uri": "https://raw.githubusercontent.com/markusotten/azure-arm-templates/master/azure-lab/AzureLabNetwork.json",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "labLocation": { "value": "[parameters('labLocation')]" },
+          "labStage": { "value": "[parameters('labStage')]" },
+          "labProject": { "value": "[parameters('labProject')]" },
+          "labVnetAddressPrefix": { "value": "[parameters('labVnetAddressPrefix')]" },
+          "labSubnetAccessAddressPrefix": { "value": "[parameters('labSubnetAccessAddressPrefix')]" },
+          "labSubnetManagementAddressPrefix": { "value": "[parameters('labSubnetManagementAddressPrefix')]" }
+        }
+      }
+    },
+    {
+    "type": "Microsoft.Resources/deployments",
+    "apiVersion": "2018-05-01",
+    "name": "AzureLabManagement",
+    "location": "[parameters('labLocation')]",
+    "properties": {
+        "mode": "Incremental",
+        "templateLink" : {
+          "uri": "https://raw.githubusercontent.com/markusotten/azure-arm-templates/master/azure-lab/AzureLabManagement.json",
           "contentVersion": "1.0.0.0"
         }
       }
