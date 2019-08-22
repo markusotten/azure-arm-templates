@@ -17,7 +17,7 @@
       "type": "Microsoft.Resources/resourceGroups",
       "apiVersion": "2018-05-01",
       "location": "[parameters('labLocation')]",
-      "name": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]",
+      "name": "[concat('RG_',parameters('labProject'),'_Network_',parameters('labStage'))]", 
       "properties": {},
       "resources": [
         {
