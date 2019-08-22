@@ -1,0 +1,2 @@
+New-AzDeployment -Location northeurope -TemplateUri https://raw.githubusercontent.com/markusotten/azure-arm-templates/master/azure-lab/AzureLab.json  -TemplateParameterUri https://raw.githubusercontent.com/markusotten/azure-arm-templates/master/azure-lab/Parameters.json
+  
